@@ -64,7 +64,7 @@ class GameScreen extends StatelessWidget {
   Widget buildQuestion(BuildContext context, QuizSession session) {
     var question = session.currentQuestion;
     double progression = session.currentQuestionIndex / session.questionsCount;
-    var answerButtons = question.answers.map((answer) {
+    var answerButtons = session.currentAnswers.map((answer) {
       return ElevatedButton(
         onPressed: () {
           session.validateAnswer(answer);
@@ -115,6 +115,7 @@ class GameScreen extends StatelessWidget {
   }
 
   Widget buildGameEnded(BuildContext context, QuizSession session) {
+    var totalPoints = session.questionsCount * session.pointsOnCorrect();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -122,7 +123,7 @@ class GameScreen extends StatelessWidget {
           Spacer(),
           Text("GAME OVER", textScaleFactor: 2.0),
           Spacer(),
-          Text("${session.score} / ${session.questionsCount}", textScaleFactor: 2.0),
+          Text("${session.score} / $totalPoints", textScaleFactor: 2.0),
           Spacer(),
           ElevatedButton(
             onPressed: () => Navigator.pop(context),

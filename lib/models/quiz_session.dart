@@ -24,10 +24,12 @@ class QuizSession with ChangeNotifier {
 
   var _hintRequested = false;
   Question _currentQuestion;
+  List<String> _currentAnswers = [];
 
   QuizSessionState get state => $state;
   int get currentQuestionIndex => _currentQuestionCount;
   Question get currentQuestion => _currentQuestion;
+  List<String> get currentAnswers => _currentAnswers;
   int get questionsCount => _totalQuestionCount;
   int get score => $score;
   bool get hintRequested => _hintRequested;
@@ -51,6 +53,11 @@ class QuizSession with ChangeNotifier {
         $state = QuizSessionState.loading;
         notifyListeners();
         _currentQuestion = await _questionRepository.fetch();
+        _currentAnswers = [..._currentQuestion.answers];
+        //shuffle if needed by game mode
+        if(shuffleAnswers()){
+          _currentAnswers.shuffle();
+        }
         $state = QuizSessionState.showing;
       }
     }
@@ -89,4 +96,5 @@ class QuizSession with ChangeNotifier {
   int pointsOnCorrect() => 1;
   int pointsOnIncorrect() => 0;
   int pointsOnHint() => 0;
+  bool shuffleAnswers() => false;
 }

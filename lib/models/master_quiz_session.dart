@@ -10,4 +10,6 @@ class MasterQuizSession extends JourneymanQuizSession {
   int pointsOnIncorrect() => -4;
   @override
   int pointsOnHint() => -2;
+  @override
+  bool shuffleAnswers() => true;
 }
