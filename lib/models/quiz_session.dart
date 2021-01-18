@@ -11,6 +11,7 @@ enum QuizSessionState {
 }
 
 class QuizSession with ChangeNotifier {
+
   var _questionRepository;
   var _totalQuestionCount;
   var _currentQuestionCount = 0;
@@ -25,6 +26,7 @@ class QuizSession with ChangeNotifier {
   Question _currentQuestion;
 
   QuizSessionState get state => $state;
+  int get currentQuestionIndex => _currentQuestionCount;
   Question get currentQuestion => _currentQuestion;
   int get questionsCount => _totalQuestionCount;
   int get score => $score;
@@ -60,13 +62,31 @@ class QuizSession with ChangeNotifier {
   }
 
   bool checkAnswer(String answer) {
-    return currentQuestion.isCorrectAnswer(answer);
+    var correct = currentQuestion.isCorrectAnswer(answer);
+    updateScore(correct ? $score+pointsOnCorrect() : $score+pointsOnIncorrect());
+    return correct;
+  }
+
+  void validateAnswer(answer){
+    if (checkAnswer(answer)) {
+      nextQuestion();
+    }
+  }
+
+  void updateScore(int newScore){
+    $score = newScore;
+    notifyListeners();
   }
 
   void requestHint() {
     _hintRequested = true;
+    updateScore($score + pointsOnHint());
     notifyListeners();
   }
 
   String get info => "";
+
+  int pointsOnCorrect() => 1;
+  int pointsOnIncorrect() => 0;
+  int pointsOnHint() => 0;
 }

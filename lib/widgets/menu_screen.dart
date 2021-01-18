@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:quiz/widgets/game_screen.dart';
 
 import 'package:quiz/models/question_repository.dart';
-import 'package:quiz/models/remote_question_repository.dart';
 
-import 'package:quiz/models/quiz_session.dart';
 import 'package:quiz/models/rookie_quiz_session.dart';
 import 'package:quiz/models/journeyman_quiz_session.dart';
 import 'package:quiz/models/warrior_quiz_session.dart';
+import 'package:quiz/models/master_quiz_session.dart';
 
 class MenuScreen extends StatelessWidget {
   final _questionRepository = new StaticQuestionRepository();
@@ -46,6 +45,14 @@ class MenuScreen extends StatelessWidget {
                 ));
               },
               child: Text("Warrior", textScaleFactor: 2.0, textAlign: TextAlign.center),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => GameScreen(MasterQuizSession(questionRepository: _questionRepository))
+                ));
+              },
+              child: Text("Master", textScaleFactor: 2.0, textAlign: TextAlign.center),
             ),
           ],
         ),

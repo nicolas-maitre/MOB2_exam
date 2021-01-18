@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,12 +63,11 @@ class GameScreen extends StatelessWidget {
 
   Widget buildQuestion(BuildContext context, QuizSession session) {
     var question = session.currentQuestion;
+    double progression = session.currentQuestionIndex / session.questionsCount;
     var answerButtons = question.answers.map((answer) {
       return ElevatedButton(
         onPressed: () {
-          if (session.checkAnswer(answer)) {
-            session.nextQuestion();
-          }
+          session.validateAnswer(answer);
         },
         child: SizedBox(
           width: double.infinity,
@@ -84,11 +85,16 @@ class GameScreen extends StatelessWidget {
             child: Text(session.info, textScaleFactor: 2.0),
           ),
           Spacer(),
+          Text('${session.score.toString()} points', textScaleFactor: 2.0),
+          Spacer(),
           buildHint(context, session),
           Spacer(),
           Text(question.caption, textScaleFactor: 2.0),
           ...answerButtons,
           Spacer(),
+          LinearProgressIndicator(
+            value: progression,
+          ),
         ],
       ),
     );
